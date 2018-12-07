@@ -12,30 +12,30 @@
 
 #define NUM_SIZE 5
 
-void save1D (double* tab, int cols) {
+void save1D (double* tab, int nbCols) {
 	FILE *fp = fopen("tmp.txt", "w");
 	int i;
 	
-	fprintf(fp, "%d\n", cols);
+	fprintf(fp, "%d\n", nbCols);
 
-	for (i=0; i<cols; i++)
+	for (i=0; i<nbCols; i++)
 		fprintf(fp, "%.2lf,", tab[i]);
 	
-	fprintf(fp, "%.2lf\n", tab[cols-1]);
+	fprintf(fp, "%.2lf\n", tab[nbCols-1]);
 	
 	fclose(fp);
 }
 
-void save2D (double** tab, int lignes, int cols) {
+void save2D (double** tab, int nbLignes, int nbCols) {
 	FILE *fp = fopen("tmp.txt", "w");
 	int i, j;
 	
-	fprintf(fp, "%d,%d\n", lignes, cols);
+	fprintf(fp, "%d,%d\n", nbLignes, nbCols);
 
-	for (i=0; i<lignes; i++) {
-		for (j=0; j<cols-1; j++)
+	for (i=0; i<nbLignes; i++) {
+		for (j=0; j<nbCols-1; j++)
 			fprintf(fp, "%.2lf,", tab[i][j]);
-		fprintf(fp, "%.2lf\n", tab[i][cols-1]);
+		fprintf(fp, "%.2lf\n", tab[i][nbCols-1]);
 	}
 	
 	fclose(fp);
@@ -97,7 +97,7 @@ double **init2D (char *fileName, int *nbLignes, int *nbCols) {
 	fscanf(fp, "%d,%d\n", nbCols, nbLignes);
 	
 	if (*nbCols == 0 || *nbLignes == 0) {
-		fprintf(stderr, "Nombre de colonnes ou lignes invalide\n");
+		fprintf(stderr, "Nombre de colonnes ou nbLignes invalide\n");
 		exit(EXIT_FAILURE);
 	}
 	
@@ -116,5 +116,6 @@ double **init2D (char *fileName, int *nbLignes, int *nbCols) {
 	return tab;
 }
 
-// tab must be initialized before calling this function.
-void step1D (double* tab, int nbElem) {}
+// tab must be initialized before calling these functions
+void step1D (double* tab, int nbCols) {}
+void step2D (double* tab, int nbLignes, int nbCols){}
