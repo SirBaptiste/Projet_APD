@@ -21,7 +21,7 @@ double *init1D (char *fileName) {
 	int i, nbCols = 0;
 	FILE *fp;
 		
-	printf("Ouverture de %s\n", fileName);
+	printf("Ouverture de \"%s\"\n", fileName);
 	
 	fp = fopen(fileName, "r"); // read mode
 	
@@ -30,7 +30,7 @@ double *init1D (char *fileName) {
 		exit(EXIT_FAILURE);
 	}
 	
-	printf("Fichier %s ouvert\n", fileName);
+	printf("Fichier \"%s\" ouvert\n", fileName);
 	
 	fscanf(fp, "%d\n", &nbCols);
 	
