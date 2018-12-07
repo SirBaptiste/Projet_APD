@@ -3,7 +3,10 @@
 #include "fonctions.h"
 
 int main(int argc, char** argv) {
-	init2D("test.txt");
+	int lignes, cols;
+	double **tab = init2D("test.txt", &lignes, &cols);
 	
+	save2D(tab, lignes, cols);
+
 	return EXIT_SUCCESS;
 }

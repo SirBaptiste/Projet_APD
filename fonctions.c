@@ -12,11 +12,39 @@
 
 #define NUM_SIZE 5
 
-void show (double* tab, int lignes, int cols) {}
+void save1D (double* tab, int cols) {
+	FILE *fp = fopen("tmp.txt", "w");
+	int i;
+	
+	fprintf(fp, "%d\n", cols);
 
-double *init1D (char *fileName) {
+	for (i=0; i<cols; i++)
+		fprintf(fp, "%.2lf,", tab[i]);
+	
+	fprintf(fp, "%.2lf\n", tab[cols-1]);
+	
+	fclose(fp);
+}
+
+void save2D (double** tab, int lignes, int cols) {
+	FILE *fp = fopen("tmp.txt", "w");
+	int i, j;
+	
+	fprintf(fp, "%d,%d\n", lignes, cols);
+
+	for (i=0; i<lignes; i++) {
+		for (j=0; j<cols-1; j++)
+			fprintf(fp, "%.2lf,", tab[i][j]);
+		fprintf(fp, "%.2lf\n", tab[i][cols-1]);
+	}
+	
+	fclose(fp);
+}
+
+double *init1D (char *fileName, int *nbCols) {
 	double *tab;
-	int i, nbCols = 0;
+	int i;
+	*nbCols = 0;
 	FILE *fp;
 		
 	printf("Ouverture de \"%s\"\n", fileName);
@@ -30,16 +58,16 @@ double *init1D (char *fileName) {
 	
 	printf("Fichier \"%s\" ouvert\n", fileName);
 	
-	fscanf(fp, "%d\n", &nbCols);
+	fscanf(fp, "%d\n", nbCols);
 	
-	if (nbCols == 0) {
+	if (*nbCols == 0) {
 		fprintf(stderr, "Nombre de colonnes invalide\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	tab = (double*) malloc(sizeof(double) * nbCols);
+	tab = (double*) malloc(sizeof(double) * *nbCols);
 	
-	for (i=0; i<nbCols; i++) 
+	for (i=0; i<*nbCols; i++) 
 		fscanf(fp, "%lf,", tab+i);
 	
 	fclose(fp);
@@ -47,15 +75,18 @@ double *init1D (char *fileName) {
 	return tab;
 }
 
-double **init2D (char *fileName) {
+double **init2D (char *fileName, int *nbLignes, int *nbCols) {
 	double **tab;
-	int i, j, nbCols = 0, nbLignes = 1;
+	int i, j;
 	FILE *fp;
 		
+	*nbCols = 0;
+	*nbLignes = 1;
+	
 	printf("Ouverture de \"%s\"\n", fileName);
-	
+
 	fp = fopen(fileName, "r"); // read mode
-	
+
 	if (fp == NULL) {
 		fprintf(stderr, "Erreur lors de l'ouverture de %s\n", fileName);
 		exit(EXIT_FAILURE);
@@ -63,19 +94,19 @@ double **init2D (char *fileName) {
 	
 	printf("Fichier \"%s\" ouvert\n", fileName);
 	
-	fscanf(fp, "%d,%d\n", &nbCols, &nbLignes);
+	fscanf(fp, "%d,%d\n", nbCols, nbLignes);
 	
-	if (nbCols == 0 || nbLignes == 0) {
+	if (*nbCols == 0 || *nbLignes == 0) {
 		fprintf(stderr, "Nombre de colonnes ou lignes invalide\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	tab = (double**) malloc(sizeof(double*) * nbLignes);
-	for(i=0; i<nbLignes; i++)
-		tab[i] = (double *) malloc(sizeof(double) * nbCols);
+	tab = (double**) malloc(sizeof(double*) * *nbLignes);
+	for(i=0; i<*nbLignes; i++)
+		tab[i] = (double *) malloc(sizeof(double) * *nbCols);
 
-	for (i=0; i<nbLignes; i++) {
-		for (j=0; j<nbCols; j++) 
+	for (i=0; i<*nbLignes; i++) {
+		for (j=0; j<*nbCols; j++) 
 			fscanf(fp, "%lf,", &tab[i][j]);
 		fgetc(fp);
 	}

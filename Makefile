@@ -14,5 +14,5 @@ test : main.o fonctions.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean :
-	$(RM) *.o seq dist
+	$(RM) *.o seq dist test
 
