@@ -5,11 +5,11 @@
 #include <stdint.h>
 
 // Affiche une image representant la chaleur dans la matrice
-void show (char* tab, int lignes, int cols);
+void show (double* tab, int lignes, int cols);
 
 // Initialise un tableau 1D a partir d'un fichier
-char *init1D (char *fileName);
+double *init1D (char *fileName);
 
 // Effectue une iteration de la propagation
-void step1D (char* tab, int nbElem);
+void step1D (double* tab, int nbElem);
 #endif
