@@ -12,9 +12,7 @@
 
 #define NUM_SIZE 5
 
-void show (double* tab, int lignes, int cols) {
-	
-}
+void show (double* tab, int lignes, int cols) {}
 
 double *init1D (char *fileName) {
 	double *tab;
@@ -49,7 +47,43 @@ double *init1D (char *fileName) {
 	return tab;
 }
 
-// tab must be initialized before calling this function.
-void step1D (double* tab, int nbElem) {
+double **init2D (char *fileName) {
+	double **tab;
+	int i, j, nbCols = 0, nbLignes = 1;
+	FILE *fp;
+		
+	printf("Ouverture de \"%s\"\n", fileName);
+	
+	fp = fopen(fileName, "r"); // read mode
+	
+	if (fp == NULL) {
+		fprintf(stderr, "Erreur lors de l'ouverture de %s\n", fileName);
+		exit(EXIT_FAILURE);
+	}
+	
+	printf("Fichier \"%s\" ouvert\n", fileName);
+	
+	fscanf(fp, "%d,%d\n", &nbCols, &nbLignes);
+	
+	if (nbCols == 0 || nbLignes == 0) {
+		fprintf(stderr, "Nombre de colonnes ou lignes invalide\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	tab = (double**) malloc(sizeof(double*) * nbLignes);
+	for(i=0; i<nbLignes; i++)
+		tab[i] = (double *) malloc(sizeof(double) * nbCols);
 
+	for (i=0; i<nbLignes; i++) {
+		for (j=0; j<nbCols; j++) 
+			fscanf(fp, "%lf,", &tab[i][j]);
+		fgetc(fp);
+	}
+	
+	fclose(fp);
+	
+	return tab;
 }
+
+// tab must be initialized before calling this function.
+void step1D (double* tab, int nbElem) {}
