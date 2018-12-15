@@ -80,7 +80,7 @@ public class APDFrame extends JFrame {
 			public void insertUpdate(DocumentEvent e) {
 				if (!duree.getText().matches("[0-9]+"))
 					JOptionPane.showMessageDialog(null, "\"" + duree.getText() + "\" n'est pas un entier",
-							"ERREUR dans durée", JOptionPane.ERROR_MESSAGE);
+							"ERREUR dans duree", JOptionPane.ERROR_MESSAGE);
 			}
 
 			@Override
@@ -90,7 +90,7 @@ public class APDFrame extends JFrame {
 		labelDuree.setLabelFor(duree);
 		panelTexte.add(duree);
 
-		JLabel labelTemp = new JLabel("Seuil de température : ", JLabel.TRAILING);
+		JLabel labelTemp = new JLabel("Seuil de temperature : ", JLabel.TRAILING);
 		panelTexte.add(labelTemp);
 		JTextField seuil_temp = new JTextField("1.0", 4);
 		seuil_temp.getDocument().addDocumentListener(new DocumentListener() {
@@ -102,7 +102,7 @@ public class APDFrame extends JFrame {
 			public void insertUpdate(DocumentEvent e) {
 				if (!seuil_temp.getText().matches("[0-9]*.[0-9]*"))
 					JOptionPane.showMessageDialog(null, "\"" + seuil_temp.getText() + "\" n'est pas un flottant",
-							"ERREUR dans seuil de température", JOptionPane.ERROR_MESSAGE);
+							"ERREUR dans seuil de temperature", JOptionPane.ERROR_MESSAGE);
 			}
 
 			@Override
@@ -126,7 +126,7 @@ public class APDFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,
-						"Êtes-vous sûr de vouloir réinitialiser les champs ?", "RESET", JOptionPane.YES_NO_OPTION)) {
+						"etes-vous sur de vouloir reinitialiser les champs ?", "RESET", JOptionPane.YES_NO_OPTION)) {
 					nbCol.setText("1");
 					nbLignes.setText("1");
 					duree.setText("1");
@@ -190,8 +190,10 @@ public class APDFrame extends JFrame {
 
 			SpringUtilities.makeGrid(panel, nbLignes, nbCol, 5, 5, 5, 5);
 			
+			
 			JPanel panel2 = new JPanel(new BorderLayout());
-			panel2.add(panel, BorderLayout.NORTH);
+			
+			panel2.add(panel,BorderLayout.NORTH);
 			JButton bouton = new JButton("Valider");
 			bouton.addActionListener(new ActionListener() {
 				@Override
@@ -203,9 +205,11 @@ public class APDFrame extends JFrame {
 					saveFileAndExeC(values, nbCol, nbLignes, dureeSec, seuilTemp);
 				}
 			});
-			panel2.add(bouton, BorderLayout.SOUTH);
-			
-			this.setContentPane(panel2);
+			panel2.add(bouton,BorderLayout.SOUTH);
+			JScrollPane scroll = new JScrollPane(panel2);
+			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+			this.setContentPane(scroll);
 			this.repaint();
 			this.revalidate();
 			this.pack();
