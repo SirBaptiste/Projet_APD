@@ -96,7 +96,7 @@ double **init2D (char *fileName, int *nbLignes, int *nbCols) {
 	
 	printf("Fichier \"%s\" ouvert\n", fileName);
 	
-	fscanf(fp, "%d;%d\n", nbCols, nbLignes);
+	fscanf(fp, "%d;%d\n", nbLignes, nbCols);
 	
 	if (*nbCols == 0 || *nbLignes == 0) {
 		fprintf(stderr, "Nombre de colonnes ou nbLignes invalide\n");
