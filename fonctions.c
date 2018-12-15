@@ -11,17 +11,19 @@
 #include "fonctions.h"
 
 #define NUM_SIZE 5
+#define COLSEPARATOR ";"
+#define LINESEPARATOR "\n"
 
 void save1D (double* tab, int nbCols) {
 	FILE *fp = fopen("tmp.txt", "w");
 	int i;
-	
+
 	fprintf(fp, "%d\n", nbCols);
 
 	for (i=0; i<nbCols; i++)
-		fprintf(fp, "%.2lf,", tab[i]);
+		fprintf(fp, "%.2lf;", tab[i]);
 	
-	fprintf(fp, "%.2lf\n", tab[nbCols-1]);
+	fprintf(fp, "%.2lf;", tab[nbCols-1]);
 	
 	fclose(fp);
 }
@@ -30,11 +32,11 @@ void save2D (double** tab, int nbLignes, int nbCols) {
 	FILE *fp = fopen("tmp.txt", "w");
 	int i, j;
 	
-	fprintf(fp, "%d,%d\n", nbLignes, nbCols);
+	fprintf(fp, "%d;%d\n", nbLignes, nbCols);
 
 	for (i=0; i<nbLignes; i++) {
 		for (j=0; j<nbCols-1; j++)
-			fprintf(fp, "%.2lf,", tab[i][j]);
+			fprintf(fp, "%.2lf;", tab[i][j]);
 		fprintf(fp, "%.2lf\n", tab[i][nbCols-1]);
 	}
 	
@@ -68,7 +70,7 @@ double *init1D (char *fileName, int *nbCols) {
 	tab = (double*) malloc(sizeof(double) * *nbCols);
 	
 	for (i=0; i<*nbCols; i++) 
-		fscanf(fp, "%lf,", tab+i);
+		fscanf(fp, "%lf;", tab+i);
 	
 	fclose(fp);
 	
@@ -94,7 +96,7 @@ double **init2D (char *fileName, int *nbLignes, int *nbCols) {
 	
 	printf("Fichier \"%s\" ouvert\n", fileName);
 	
-	fscanf(fp, "%d,%d\n", nbCols, nbLignes);
+	fscanf(fp, "%d;%d\n", nbCols, nbLignes);
 	
 	if (*nbCols == 0 || *nbLignes == 0) {
 		fprintf(stderr, "Nombre de colonnes ou nbLignes invalide\n");
@@ -107,7 +109,7 @@ double **init2D (char *fileName, int *nbLignes, int *nbCols) {
 
 	for (i=0; i<*nbLignes; i++) {
 		for (j=0; j<*nbCols; j++) 
-			fscanf(fp, "%lf,", &tab[i][j]);
+			fscanf(fp, "%lf;", &tab[i][j]);
 		fgetc(fp);
 	}
 	
