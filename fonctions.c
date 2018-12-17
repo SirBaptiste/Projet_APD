@@ -124,7 +124,7 @@ double *init2D (char *fileName, int *nbLignes, int *nbCols, int *duree, double *
 	return tab;
 }
 
-//Calcul de la repartission de la chaleur pour une matrice 1D
+//Calcul de la repartition de la chaleur pour une matrice 1D
 
 void Calcul_Temp_1d(double *tab, int tailleLigne, int duree, double seuil_temp)
 {
@@ -161,14 +161,14 @@ void Calcul_Temp_1d(double *tab, int tailleLigne, int duree, double seuil_temp)
 }
 
 
-//Calcul de la repartission de la chaleur pour une matrice 2D
+//Calcul de la repartition de la chaleur pour une matrice 2D
 void Calcul_Temp_2d(double *tab, int nbLigne, int tailleLigne, double seuil_temp) {
 	double *tmp_tab;
 	int i,j;
 	double tmp;
-	
+
 	tmp_tab = (double *) malloc(sizeof(double) * tailleLigne*nbLigne);
-	
+
 	//init tab temp
 	for(i=0;i<tailleLigne*nbLigne;i++)
 		tmp_tab[i] = seuil_temp;
@@ -184,9 +184,18 @@ void Calcul_Temp_2d(double *tab, int nbLigne, int tailleLigne, double seuil_temp
 			}
 		}
 
+		//cellule haut gauche
+		tmp_tab[0] = 4*tab[0]+ tab[1];
+		//cellule haut droite
+		tmp_tab[tailleLigne-1] = tab[tailleLigne-2]+ 4*tab[tailleLigne-1];
+		//cellule bas gauche 
+		tmp_tab[tailleLigne * (nbLigne -1)] = 4*tab[tailleLigne * (nbLigne -1)]+ tab[tailleLigne * (nbLigne -1) + 1];
+		//cellle bas droite
+		tmp_tab[tailleLigne * (nbLigne)-1] = 4*tab[tailleLigne * (nbLigne)-1]+ tab[tailleLigne * (nbLigne)-2];
+
 		//Recopie du tableau
 		for(i=0;i<nbLigne;i++) {
-			for(j=1;j<tailleLigne-1;j++)
+			for(j=0;j<tailleLigne;j++)
 				tab[i*tailleLigne+j] = tmp_tab[i*tailleLigne+j]/6;
 		}
 
@@ -199,13 +208,20 @@ void Calcul_Temp_2d(double *tab, int nbLigne, int tailleLigne, double seuil_temp
 			}
 		}
 
+		//cellule haut gauche
+		tmp_tab[0] = 4*tab[0]+ tab[tailleLigne];
+		//cellule haut droite
+		tmp_tab[tailleLigne-1] = tab[tailleLigne-1 + tailleLigne]+ 4*tab[tailleLigne-1];
+		//cellule bas gauche 
+		tmp_tab[tailleLigne * (nbLigne -1)] = 4*tab[tailleLigne * (nbLigne -1)]+ tab[tailleLigne * (nbLigne -1) - tailleLigne];
+		//cellle bas droite
+		tmp_tab[tailleLigne * (nbLigne)-1] = 4*tab[tailleLigne * (nbLigne)-1]+ tab[tailleLigne * (nbLigne)-1 - tailleLigne];
+
 		//Recopie du tableau
-		for(i=1;i<nbLigne-1;i++) {
+		for(i=0;i<nbLigne;i++) {
 			for(j=0;j<tailleLigne;j++)
 				tab[i*tailleLigne+j] = tmp_tab[i*tailleLigne+j]/6;
 		}
-		
-
 }
 //Affichage de la matrice (uniquement pour les tests)
 void show_tab(double *tab,int nbLigne, int tailleLigne) {
