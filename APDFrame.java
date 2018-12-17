@@ -267,7 +267,7 @@ public class APDFrame extends JFrame {
 			}
 		} catch (IOException e) {e.printStackTrace();}
 		
-		String cmd = "mpirun -np " + nbProcess + " test";
+		String cmd = "mpirun -np " + nbProcess + " ./test";
 		if(saveImgs)	cmd += " save";
 		cmd += " " + freq;
 
