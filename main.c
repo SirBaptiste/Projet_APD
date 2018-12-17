@@ -4,9 +4,12 @@
 
 int main(int argc, char** argv) {
 	int lignes, cols;
-	double **tab = init2D("test.txt", &lignes, &cols);
+	int duree, i;
+	double seuil;
+	double **tab = init2D("tmp.txt", &lignes, &cols, &duree, &seuil);
 	
-	save2D(tab, lignes, cols);
+	for (i=0; i<duree; i++)
+		save2D(tab, lignes, cols, duree);
 
 	return EXIT_SUCCESS;
 }

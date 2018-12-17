@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <sys/time.h>
+#include <unistd.h>
 #include <ctype.h>
 
 #include "fonctions.h"
@@ -14,8 +14,8 @@
 #define COLSEPARATOR ";"
 #define LINESEPARATOR "\n"
 
-void save1D (double* tab, int nbCols) {
-	FILE *fp = fopen("tmp.txt", "w");
+void save1D (double* tab, int nbCols, int duree) {
+	FILE *fp = fopen("out.txt", "a");
 	int i;
 
 	fprintf(fp, "%d\n", nbCols);
@@ -28,11 +28,13 @@ void save1D (double* tab, int nbCols) {
 	fclose(fp);
 }
 
-void save2D (double** tab, int nbLignes, int nbCols) {
-	FILE *fp = fopen("tmp.txt", "w");
+void save2D (double** tab, int nbLignes, int nbCols, int duree) {
+	int existed = access("out.txt", F_OK);
+	FILE *fp = fopen("out.txt", "a");
 	int i, j;
 	
-	fprintf(fp, "%d;%d\n", nbLignes, nbCols);
+	if(existed == -1) // Fichier cree
+		fprintf(fp, "%d\n%d;%d\n", duree, nbLignes, nbCols);
 
 	for (i=0; i<nbLignes; i++) {
 		for (j=0; j<nbCols-1; j++)
@@ -43,7 +45,7 @@ void save2D (double** tab, int nbLignes, int nbCols) {
 	fclose(fp);
 }
 
-double *init1D (char *fileName, int *nbCols) {
+double *init1D (char *fileName, int *nbCols, int *duree, double *seuil) {
 	double *tab;
 	int i;
 	*nbCols = 0;
@@ -60,7 +62,7 @@ double *init1D (char *fileName, int *nbCols) {
 	
 	printf("Fichier \"%s\" ouvert\n", fileName);
 	
-	fscanf(fp, "%d\n", nbCols);
+	fscanf(fp, "%d\n%d\n%lf\n", nbCols, duree, seuil);
 	
 	if (*nbCols == 0) {
 		fprintf(stderr, "Nombre de colonnes invalide\n");
@@ -77,7 +79,7 @@ double *init1D (char *fileName, int *nbCols) {
 	return tab;
 }
 
-double **init2D (char *fileName, int *nbLignes, int *nbCols) {
+double **init2D (char *fileName, int *nbLignes, int *nbCols, int *duree, double *seuil) {
 	double **tab;
 	int i, j;
 	FILE *fp;
@@ -96,7 +98,7 @@ double **init2D (char *fileName, int *nbLignes, int *nbCols) {
 	
 	printf("Fichier \"%s\" ouvert\n", fileName);
 	
-	fscanf(fp, "%d;%d\n", nbLignes, nbCols);
+	fscanf(fp, "%d;%d\n%d\n%lf\n", nbLignes, nbCols, duree, seuil);
 	
 	if (*nbCols == 0 || *nbLignes == 0) {
 		fprintf(stderr, "Nombre de colonnes ou nbLignes invalide\n");
