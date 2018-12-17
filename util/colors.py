@@ -91,7 +91,7 @@ def getstep(reso):
         step = int(math.sqrt(math.floor(defaultres/reso)))
     return step
 
-def tabprint(tab, save, img_folder):
+def tabprint(tab, save, img_folder, prate):
     tabinfo = numpy.shape(tab)
     step = getstep(tabinfo[1]*tabinfo[2])
     for matrice in range(0, tabinfo[0]):
@@ -100,11 +100,11 @@ def tabprint(tab, save, img_folder):
             for col in range(0, tabinfo[2] * step, step):
                 image[line:line + step, col:col + step] = tab[matrice][line / step, col / step]
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(image, 'T= '+str(matrice)+'s', (int((tabinfo[2] * step)/2), tabinfo[1] * step + 40), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(image, 'T= '+str(matrice)+'s', (int(((tabinfo[2]-1) * step)/2), tabinfo[1] * step + 40), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
         cv2.imshow("Evolution de la temperature", image)
-        cv2.waitKey(0)
+        cv2.waitKey(prate)
         if( save == 1):
             if( not os.path.isdir('./img_results')):
                 os.makedirs('./img_results')
-            cv2.imwrite(img_folder + "/temp_img_t"+str(matrice)+".jpg", image);
+            cv2.imwrite(img_folder + "/temp_img_t"+str(matrice)+".jpg", image)
 
