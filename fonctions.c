@@ -194,10 +194,8 @@ void Calcul_Temp_2d(double *tab, int nbLigne, int tailleLigne, double seuil_temp
 		tmp_tab[tailleLigne * (nbLigne)-1] = 4*tab[tailleLigne * (nbLigne)-1]+ tab[tailleLigne * (nbLigne)-2];
 
 		//Recopie du tableau
-		for(i=0;i<nbLigne;i++) {
-			for(j=0;j<tailleLigne;j++)
-				tab[i*tailleLigne+j] = tmp_tab[i*tailleLigne+j]/6;
-		}
+		for(i=0;i<nbLigne*tailleLigne;i++)
+			tab[i] = tmp_tab[i]/6;
 
 		//diffusion selon I
 		for(i=1;i<nbLigne-1;i++) {
@@ -218,10 +216,8 @@ void Calcul_Temp_2d(double *tab, int nbLigne, int tailleLigne, double seuil_temp
 		tmp_tab[tailleLigne * (nbLigne)-1] = 4*tab[tailleLigne * (nbLigne)-1]+ tab[tailleLigne * (nbLigne)-1 - tailleLigne];
 
 		//Recopie du tableau
-		for(i=0;i<nbLigne;i++) {
-			for(j=0;j<tailleLigne;j++)
-				tab[i*tailleLigne+j] = tmp_tab[i*tailleLigne+j]/6;
-		}
+		for(i=0;i<nbLigne*tailleLigne;i++)
+			tab[i] = tmp_tab[i]/6;
 }
 //Affichage de la matrice (uniquement pour les tests)
 void show_tab(double *tab,int nbLigne, int tailleLigne) {
@@ -231,9 +227,7 @@ void show_tab(double *tab,int nbLigne, int tailleLigne) {
 			printf("|%lf",tab[j+i*tailleLigne]);
 
 		printf("\n");
-
 	}
-
 }
 
 
