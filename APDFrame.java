@@ -111,12 +111,30 @@ public class APDFrame extends JFrame {
 		});
 		panelTexte.add(save);
 		panelTexte.add(new JLabel(""));
+		
+		JLabel labelFreq = new JLabel("Frequence d'affichage (ms) : ");
+		panelTexte.add(labelFreq);
+		JTextField freq = new JTextField("1000", 6);
+		freq.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				if (!freq.getText().matches("[0-9]+"))
+					JOptionPane.showMessageDialog(null, "\"" + freq.getText() + "\" n'est pas un entier",
+							"ERREUR dans frequence", JOptionPane.ERROR_MESSAGE);
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {}
+		});
+		labelFreq.setLabelFor(freq);
+		panelTexte.add(freq);
 
 		JButton bouton = new JButton("Valider");
 		bouton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				genMatrice(nbCol.getText(), nbLignes.getText(), duree.getText(), seuil_temp.getText());
+				genMatrice(nbCol.getText(), nbLignes.getText(), duree.getText(), seuil_temp.getText(), freq.getText());
 			}
 		});
 		panelTexte.add(bouton);
@@ -136,7 +154,7 @@ public class APDFrame extends JFrame {
 		});
 		panelTexte.add(bouton2);
 
-		SpringUtilities.makeCompactGrid(panelTexte, 6, 2, 6, 6, 6, 6);
+		SpringUtilities.makeCompactGrid(panelTexte, 7, 2, 6, 6, 6, 6);
 
 		panelTexte.setOpaque(true);
 		this.setContentPane(panelTexte);
@@ -149,12 +167,13 @@ public class APDFrame extends JFrame {
 	public APDFrame(String arg0) throws HeadlessException {super(arg0);}
 	public APDFrame(String arg0, GraphicsConfiguration arg1) {super(arg0, arg1);}
 
-	private void genMatrice(String col, String lignes, String duree, String seuil_temp) {
+	private void genMatrice(String col, String lignes, String duree, String seuil_temp, String freq) {
 		try {
 			int nbCol = Integer.parseInt(col);
 			int nbLignes = Integer.parseInt(lignes);
 			int dureeSec = Integer.parseInt(duree);
 			float seuilTemp = Float.parseFloat(seuil_temp);
+			int iFreq = Integer.parseInt(freq);
 			JPanel panel = new JPanel(new SpringLayout());
 			JTextField textFields[] = new JTextField[nbCol * nbLignes];
 
@@ -193,7 +212,7 @@ public class APDFrame extends JFrame {
 					for(int i=0; i<nbCol*nbLignes; i++)
 						values[i] = textFields[i].getText();
 					
-					saveFileAndExeC(values, nbCol, nbLignes, dureeSec, seuilTemp);
+					saveFileAndExeC(values, nbCol, nbLignes, dureeSec, seuilTemp, freq);
 				}
 			});
 			panel2.add(bouton,BorderLayout.SOUTH);
@@ -210,7 +229,7 @@ public class APDFrame extends JFrame {
 		}
 	}
 	
-	private void saveFileAndExeC(String[] values, int nbCol, int nbLignes, int dureeSec, float seuilTemp) {
+	private void saveFileAndExeC(String[] values, int nbCol, int nbLignes, int dureeSec, float seuilTemp, String freq) {
 		try(BufferedWriter bf = new BufferedWriter(new FileWriter("tmp.txt"))) {
 			if(nbLignes != 1)
 				bf.write(Integer.toString(nbLignes)+COLSEP+Integer.toString(nbCol)+LINESEP);
@@ -230,6 +249,7 @@ public class APDFrame extends JFrame {
 		
 		String cmd = "./test";
 		if(saveImgs)	cmd += " save";
+		cmd += " " + freq;
 
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
