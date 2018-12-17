@@ -91,7 +91,7 @@ def getstep(reso):
         step = int(math.sqrt(math.floor(defaultres/reso)))
     return step
 
-def tabprint(tab,save):
+def tabprint(tab, save, img_folder):
     tabinfo = numpy.shape(tab)
     step = getstep(tabinfo[1]*tabinfo[2])
     image = numpy.zeros((int(tabinfo[1]) * step, int(tabinfo[2]) * step, 3), numpy.uint8)
@@ -104,5 +104,5 @@ def tabprint(tab,save):
         if( save == 1):
             if( not os.path.isdir('./img_results')):
                 os.makedirs('./img_results')
-            cv2.imwrite("./img_results/tempimg_t"+str(matrice)+".jpg", image);
+            cv2.imwrite(img_folder + "/temp_img_t"+str(matrice)+".jpg", image);
 
