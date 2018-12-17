@@ -173,28 +173,26 @@ void Calcul_Temp_2d(double *tab, int nbLigne, int tailleLigne, double seuil_temp
 	for(i=0;i<tailleLigne*nbLigne;i++)
 		tmp_tab[i] = seuil_temp;
 
-
 	//diffusion
 		//diffusion selon J
-		for(i=1;i<nbLigne-1;i++) {
+		for(i=0;i<nbLigne;i++) {
 			for(j=1;j<tailleLigne-1;j++) {
 				//Somme sur les valeurs horizontales
 				tmp = tab[(j-1)+(i)*tailleLigne]+4*tab[j+(i)*tailleLigne]+tab[(j+1)+(i)*tailleLigne];
-				
+
 				tmp_tab[j+i*tailleLigne] = tmp;
 			}
 		}
-		
-		
+
 		//Recopie du tableau
-		for(i=1;i<nbLigne-1;i++) {
+		for(i=0;i<nbLigne;i++) {
 			for(j=1;j<tailleLigne-1;j++)
 				tab[i*tailleLigne+j] = tmp_tab[i*tailleLigne+j]/6;
 		}
 
 		//diffusion selon I
 		for(i=1;i<nbLigne-1;i++) {
-			for(j=1;j<tailleLigne-1;j++) {
+			for(j=0;j<tailleLigne;j++) {
 				//Somme sur les valeurs horizontales
 				tmp = tab[(j)+(i-1)*tailleLigne]+4*tab[j+(i)*tailleLigne]+tab[(j)+(i+1)*tailleLigne];
 				tmp_tab[j+(i)*tailleLigne]=tmp;	
@@ -203,7 +201,7 @@ void Calcul_Temp_2d(double *tab, int nbLigne, int tailleLigne, double seuil_temp
 
 		//Recopie du tableau
 		for(i=1;i<nbLigne-1;i++) {
-			for(j=1;j<tailleLigne-1;j++)
+			for(j=0;j<tailleLigne;j++)
 				tab[i*tailleLigne+j] = tmp_tab[i*tailleLigne+j]/6;
 		}
 		
