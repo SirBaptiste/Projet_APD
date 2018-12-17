@@ -129,12 +129,30 @@ public class APDFrame extends JFrame {
 		});
 		labelFreq.setLabelFor(freq);
 		panelTexte.add(freq);
+		
+		JLabel labelProcess = new JLabel("Nombre de processus : ");
+		panelTexte.add(labelProcess);
+		JTextField nbProcess = new JTextField("4", 2);
+		nbProcess.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				if (!nbProcess.getText().matches("[0-9]+"))
+					JOptionPane.showMessageDialog(null, "\"" + nbProcess.getText() + "\" n'est pas un entier",
+							"ERREUR dans nombre de processus", JOptionPane.ERROR_MESSAGE);
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {}
+		});
+		labelProcess.setLabelFor(nbProcess);
+		panelTexte.add(nbProcess);
 
 		JButton bouton = new JButton("Valider");
 		bouton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				genMatrice(nbCol.getText(), nbLignes.getText(), duree.getText(), seuil_temp.getText(), freq.getText());
+				genMatrice(nbCol.getText(), nbLignes.getText(), duree.getText(), seuil_temp.getText(), freq.getText(), nbProcess.getText());
 			}
 		});
 		panelTexte.add(bouton);
@@ -154,7 +172,7 @@ public class APDFrame extends JFrame {
 		});
 		panelTexte.add(bouton2);
 
-		SpringUtilities.makeCompactGrid(panelTexte, 7, 2, 6, 6, 6, 6);
+		SpringUtilities.makeCompactGrid(panelTexte, 8, 2, 6, 6, 6, 6);
 
 		panelTexte.setOpaque(true);
 		this.setContentPane(panelTexte);
@@ -167,13 +185,14 @@ public class APDFrame extends JFrame {
 	public APDFrame(String arg0) throws HeadlessException {super(arg0);}
 	public APDFrame(String arg0, GraphicsConfiguration arg1) {super(arg0, arg1);}
 
-	private void genMatrice(String col, String lignes, String duree, String seuil_temp, String freq) {
+	private void genMatrice(String col, String lignes, String duree, String seuil_temp, String freq, String nbProcess) {
 		try {
 			int nbCol = Integer.parseInt(col);
 			int nbLignes = Integer.parseInt(lignes);
 			int dureeSec = Integer.parseInt(duree);
 			float seuilTemp = Float.parseFloat(seuil_temp);
 			int iFreq = Integer.parseInt(freq);
+			int iNbProcess = Integer.parseInt(nbProcess);
 			JPanel panel = new JPanel(new SpringLayout());
 			JTextField textFields[] = new JTextField[nbCol * nbLignes];
 
@@ -212,13 +231,14 @@ public class APDFrame extends JFrame {
 					for(int i=0; i<nbCol*nbLignes; i++)
 						values[i] = textFields[i].getText();
 					
-					saveFileAndExeC(values, nbCol, nbLignes, dureeSec, seuilTemp, freq);
+					saveFileAndExeC(values, nbCol, nbLignes, dureeSec, seuilTemp, freq, nbProcess);
 				}
 			});
 			panel2.add(bouton,BorderLayout.SOUTH);
 			JScrollPane scroll = new JScrollPane(panel2);
 			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+			scroll.getVerticalScrollBar().setUnitIncrement(16);
 			this.setContentPane(scroll);
 			this.repaint();
 			this.revalidate();
@@ -229,7 +249,7 @@ public class APDFrame extends JFrame {
 		}
 	}
 	
-	private void saveFileAndExeC(String[] values, int nbCol, int nbLignes, int dureeSec, float seuilTemp, String freq) {
+	private void saveFileAndExeC(String[] values, int nbCol, int nbLignes, int dureeSec, float seuilTemp, String freq, String nbProcess) {
 		try(BufferedWriter bf = new BufferedWriter(new FileWriter("tmp.txt"))) {
 			if(nbLignes != 1)
 				bf.write(Integer.toString(nbLignes)+COLSEP+Integer.toString(nbCol)+LINESEP);
@@ -247,7 +267,7 @@ public class APDFrame extends JFrame {
 			}
 		} catch (IOException e) {e.printStackTrace();}
 		
-		String cmd = "./test";
+		String cmd = "mpirun -np " + nbProcess + " test";
 		if(saveImgs)	cmd += " save";
 		cmd += " " + freq;
 
