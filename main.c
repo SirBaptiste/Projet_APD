@@ -71,17 +71,11 @@ int main(int argc, char** argv) {
 		offset = (rang==0)? 0:nbCol;
 		MPI_Gather(sousMat+offset, nbElem, MPI_DOUBLE, tab, nbElem, MPI_CHAR, 0, MPI_COMM_WORLD);
 		if(rang == 0){
-			show_tab(tab, nbLignes, nbCol);
-			usleep(100000);
-			system("clear");
+			//Enregistrement de la matrice 2D
+			save2D(tab, nbLignes, nbCol, duree);
 		}
 	}
 
-
-
-	//Enregistrement de la matrice 2D
-	for (i=0; i<duree; i++)
-		save2D(tab, nbLignes, nbCol, duree);
 	//Enregistre les images 	
 	if (argc == 2) {
 		if(execlp("python", "python", "img_gen.py", "1", NULL) == -1)
