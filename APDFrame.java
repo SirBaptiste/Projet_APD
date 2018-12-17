@@ -51,19 +51,15 @@ public class APDFrame extends JFrame {
 		JTextField nbLignes = new JTextField("1", 4);
 		nbLignes.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
-			public void removeUpdate(DocumentEvent e) {
-			}
-
+			public void removeUpdate(DocumentEvent e) {}
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				if (!nbLignes.getText().matches("[0-9]+"))
 					JOptionPane.showMessageDialog(null, "\"" + nbLignes.getText() + "\" n'est pas un entier",
 							"ERREUR dans nombre de lignes", JOptionPane.ERROR_MESSAGE);
 			}
-
 			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
+			public void changedUpdate(DocumentEvent e) {}
 		});
 		labelLigne.setLabelFor(nbLignes);
 		panelTexte.add(nbLignes);
@@ -73,19 +69,15 @@ public class APDFrame extends JFrame {
 		JTextField duree = new JTextField("1", 3);
 		duree.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
-			public void removeUpdate(DocumentEvent e) {
-			}
-
+			public void removeUpdate(DocumentEvent e) {}
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				if (!duree.getText().matches("[0-9]+"))
 					JOptionPane.showMessageDialog(null, "\"" + duree.getText() + "\" n'est pas un entier",
 							"ERREUR dans duree", JOptionPane.ERROR_MESSAGE);
 			}
-
 			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
+			public void changedUpdate(DocumentEvent e) {}
 		});
 		labelDuree.setLabelFor(duree);
 		panelTexte.add(duree);
@@ -95,19 +87,15 @@ public class APDFrame extends JFrame {
 		JTextField seuil_temp = new JTextField("1.0", 4);
 		seuil_temp.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
-			public void removeUpdate(DocumentEvent e) {
-			}
-
+			public void removeUpdate(DocumentEvent e) {}
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				if (!seuil_temp.getText().matches("[0-9]*.[0-9]*"))
 					JOptionPane.showMessageDialog(null, "\"" + seuil_temp.getText() + "\" n'est pas un flottant",
 							"ERREUR dans seuil de temperature", JOptionPane.ERROR_MESSAGE);
 			}
-
 			@Override
-			public void changedUpdate(DocumentEvent e) {
-			}
+			public void changedUpdate(DocumentEvent e) {}
 		});
 		labelTemp.setLabelFor(seuil_temp);
 		panelTexte.add(seuil_temp);
@@ -145,17 +133,9 @@ public class APDFrame extends JFrame {
 		this.setVisible(true);
 	}
 
-	public APDFrame(GraphicsConfiguration arg0) {
-		super(arg0);
-	}
-
-	public APDFrame(String arg0) throws HeadlessException {
-		super(arg0);
-	}
-
-	public APDFrame(String arg0, GraphicsConfiguration arg1) {
-		super(arg0, arg1);
-	}
+	public APDFrame(GraphicsConfiguration arg0) {super(arg0);}
+	public APDFrame(String arg0) throws HeadlessException {super(arg0);}
+	public APDFrame(String arg0, GraphicsConfiguration arg1) {super(arg0, arg1);}
 
 	private void genMatrice(String col, String lignes, String duree, String seuil_temp) {
 		try {
@@ -189,7 +169,6 @@ public class APDFrame extends JFrame {
 			}
 
 			SpringUtilities.makeGrid(panel, nbLignes, nbCol, 5, 5, 5, 5);
-			
 			
 			JPanel panel2 = new JPanel(new BorderLayout());
 			
