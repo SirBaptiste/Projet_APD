@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,9 +20,11 @@ import javax.swing.text.BadLocationException;
 public class APDFrame extends JFrame {
 	private final String COLSEP = ";";
 	private final String LINESEP = "\n";
+	private boolean saveImgs;
 	
 	public APDFrame() throws HeadlessException {
 		super("Propagation de la chaleur");
+		saveImgs = false;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panelTexte = new JPanel(new SpringLayout());
 
@@ -99,6 +103,14 @@ public class APDFrame extends JFrame {
 		});
 		labelTemp.setLabelFor(seuil_temp);
 		panelTexte.add(seuil_temp);
+		
+		JCheckBox save = new JCheckBox("Enregistrer les images ?");
+		save.addItemListener(new ItemListener() {			
+			@Override
+			public void itemStateChanged(ItemEvent e) {saveImgs = (e.getStateChange() == ItemEvent.SELECTED);}
+		});
+		panelTexte.add(save);
+		panelTexte.add(new JLabel(""));
 
 		JButton bouton = new JButton("Valider");
 		bouton.addActionListener(new ActionListener() {
@@ -124,7 +136,7 @@ public class APDFrame extends JFrame {
 		});
 		panelTexte.add(bouton2);
 
-		SpringUtilities.makeCompactGrid(panelTexte, 5, 2, 6, 6, 6, 6);
+		SpringUtilities.makeCompactGrid(panelTexte, 6, 2, 6, 6, 6, 6);
 
 		panelTexte.setOpaque(true);
 		this.setContentPane(panelTexte);
@@ -217,6 +229,8 @@ public class APDFrame extends JFrame {
 		} catch (IOException e) {e.printStackTrace();}
 		
 		String cmd = "./test";
+		if(saveImgs)	cmd += " save";
+
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
