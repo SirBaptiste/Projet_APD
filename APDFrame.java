@@ -250,6 +250,7 @@ public class APDFrame extends JFrame {
 	}
 	
 	private void saveFileAndExeC(String[] values, int nbCol, int nbLignes, int dureeSec, float seuilTemp, String freq, String nbProcess) {
+		this.setVisible(false);
 		try(BufferedWriter bf = new BufferedWriter(new FileWriter("tmp.txt"))) {
 			if(nbLignes != 1)
 				bf.write(Integer.toString(nbLignes)+COLSEP+Integer.toString(nbCol)+LINESEP);
