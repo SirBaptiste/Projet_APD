@@ -89,8 +89,6 @@ def getstep(reso):
     step = 1
     if(reso < defaultres ):
         step = int(math.sqrt(math.floor(defaultres/reso)))
-    print reso
-    print step
     return step
 
 def tabprint(tab,save):
