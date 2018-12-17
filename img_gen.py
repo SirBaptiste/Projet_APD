@@ -1,5 +1,6 @@
 from util import colors
 import sys
+import os
 
 FILENAME = 'out.txt'
 
