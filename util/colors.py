@@ -89,27 +89,27 @@ def purgefolder(folder):
         for file in files:
             os.remove(os.path.join(root, file))
 
-def getstep(xres,yres):
-    ydef = 960
-    xdef = 540
-    xstep = 1
-    ystep = 1
-    if(xres < xdef ):
-        xstep = int(round(math.floor(xdef/xres)))
-    if(yres < ydef ):
-        ystep = int(round(math.floor(ydef/yres)))
-    return (xstep,ystep)
+def getstep(lres,cres):
+    cdef = 960 # Nombre de colonne minimum
+    ldef = 540 # Nombre de ligne minimum
+    lstep = 1
+    cstep = 1
+    if(lres < ldef ):
+        lstep = int(math.floor(ldef/lres)+1)
+    if(cres < cdef ):
+        cstep = int(math.floor(cdef/cres)+1)
+    return (lstep,cstep)
 
 def tabprint(tab, save, img_folder, prate):
     tabinfo = numpy.shape(tab)
-    xstep,ystep = getstep(tabinfo[1],tabinfo[2])
+    lstep,cstep = getstep(tabinfo[1],tabinfo[2])
     for matrice in range(0, tabinfo[0]):
-        image = numpy.zeros((int(tabinfo[1]) * xstep + 50, int(tabinfo[2]) * ystep, 3), numpy.uint8)
-        for line in range(0, tabinfo[1] * xstep, xstep):
-            for col in range(0, tabinfo[2] * ystep, ystep):
-                image[line:line + xstep, col:col + ystep] = tab[matrice][line / xstep, col / ystep]
+        image = numpy.zeros((int(tabinfo[1]) * lstep + 50, int(tabinfo[2]) * cstep, 3), numpy.uint8)
+        for line in range(0, tabinfo[1] * lstep, lstep):
+            for col in range(0, tabinfo[2] * cstep, cstep):
+                image[line:line + lstep, col:col + cstep] = tab[matrice][line / lstep, col / cstep]
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(image, 'T= '+str(matrice)+'s', (int(((tabinfo[2]-1) * ystep)/2), tabinfo[1] * xstep + 40), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(image, 'T= '+str(matrice)+'s', (int(((tabinfo[2]-1) * cstep)/2), tabinfo[1] * lstep + 40), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
         cv2.imshow("Evolution de la temperature", image)
         cv2.waitKey(prate)
         if( save == 1):
