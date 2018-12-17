@@ -84,23 +84,32 @@ def filereader(filename):
     reader.close()
     return tabmatrice
 
-def getstep(reso):
-    defaultres = 800 * 800
-    step = 1
-    if(reso < defaultres ):
-        step = int(math.sqrt(math.floor(defaultres/reso)))
-    return step
+def purgefolder(folder):
+    for root, dirs, files in os.walk(folder):
+        for file in files:
+            os.remove(os.path.join(root, file))
+
+def getstep(xres,yres):
+    ydef = 960
+    xdef = 540
+    xstep = 1
+    ystep = 1
+    if(xres < xdef ):
+        xstep = int(round(math.floor(xdef/xres)))
+    if(yres < ydef ):
+        ystep = int(round(math.floor(ydef/yres)))
+    return (xstep,ystep)
 
 def tabprint(tab, save, img_folder, prate):
     tabinfo = numpy.shape(tab)
-    step = getstep(tabinfo[1]*tabinfo[2])
+    xstep,ystep = getstep(tabinfo[1],tabinfo[2])
     for matrice in range(0, tabinfo[0]):
-        image = numpy.zeros((int(tabinfo[1]) * step + 50, int(tabinfo[2]) * step, 3), numpy.uint8)
-        for line in range(0, tabinfo[1] * step, step):
-            for col in range(0, tabinfo[2] * step, step):
-                image[line:line + step, col:col + step] = tab[matrice][line / step, col / step]
+        image = numpy.zeros((int(tabinfo[1]) * xstep + 50, int(tabinfo[2]) * ystep, 3), numpy.uint8)
+        for line in range(0, tabinfo[1] * xstep, xstep):
+            for col in range(0, tabinfo[2] * ystep, ystep):
+                image[line:line + xstep, col:col + ystep] = tab[matrice][line / xstep, col / ystep]
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cv2.putText(image, 'T= '+str(matrice)+'s', (int(((tabinfo[2]-1) * step)/2), tabinfo[1] * step + 40), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(image, 'T= '+str(matrice)+'s', (int(((tabinfo[2]-1) * ystep)/2), tabinfo[1] * xstep + 40), font, 1, (0, 255, 0), 2, cv2.LINE_AA)
         cv2.imshow("Evolution de la temperature", image)
         cv2.waitKey(prate)
         if( save == 1):
