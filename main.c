@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
 			fprintf(stderr, "%d EST PAS UN DIVISEUR DE %d\n", nbProcess, nbLignes);
 			return EXIT_FAILURE;
 		}
+		save2D(tab,nbLignes,nbCol,duree);
 	}
 
 	MPI_Bcast(&nbLignes, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -42,6 +43,7 @@ int main(int argc, char** argv) {
 
 	for(j=0; j<duree; j++) {
 		if(rang == 0) {
+			printf("Calcul matrice de T=%ds\n",j+1);
 			// Envoi des sous matrices
 			for(i=0; i<nbProcess; i++) {
 				// Ps 0
