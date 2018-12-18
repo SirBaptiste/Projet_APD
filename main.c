@@ -14,6 +14,10 @@ int main(int argc, char** argv) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &rang);
 	MPI_Comm_size(MPI_COMM_WORLD, &nbProcess);
 
+	MPI_Request reqSend;
+
+	MPI_Request reqRecv;
+
 	// Verif taille tab avec nb proc
 	if (rang==0) {
 		tab  = init2D("tmp.txt", &nbLignes, &nbCol, &duree, &seuil);
@@ -48,20 +52,22 @@ int main(int argc, char** argv) {
 			for(i=0; i<nbProcess; i++) {
 				// Ps 0
 				if (i==0)
-					MPI_Send(tab, nbElem+nbCol, MPI_DOUBLE, i, 0, MPI_COMM_WORLD);
+					MPI_Isend(tab, nbElem+nbCol, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, &reqSend);
 				else if (i != nbProcess -1)
-					MPI_Send(tab + (i*nbElem - nbCol), nbElem+nbCol*2, MPI_DOUBLE, i, 0, MPI_COMM_WORLD);
+					MPI_Isend(tab + (i*nbElem - nbCol), nbElem+nbCol*2, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, &reqSend);
 				// Dernier Ps
 				else
-					MPI_Send(tab + i*nbElem - nbCol, nbElem+nbCol, MPI_DOUBLE, i, 0, MPI_COMM_WORLD);
+					MPI_Isend(tab + i*nbElem - nbCol, nbElem+nbCol, MPI_DOUBLE, i, 0, MPI_COMM_WORLD, &reqSend);
 			}
 		}
 
-		MPI_Recv(sousMat, tailleSousMat, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Irecv(sousMat, tailleSousMat, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &reqRecv);
+		//MPI_Waitall(1,&reqRecv,MPI_STATUSES_IGNORE);
+
+		MPI_Barrier(MPI_COMM_WORLD);
 
 		// Iteration
 		Calcul_Temp_2d(sousMat, nbLignesRecues, nbCol,seuil);
-
 		// Regroupement des sous matrices à root
 		offset = (rang==0)? 0:nbCol;
 		MPI_Gather(sousMat+offset, nbElem, MPI_DOUBLE, tab, nbElem, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -82,6 +88,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize();
 
 	return EXIT_SUCCESS;

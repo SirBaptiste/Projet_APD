@@ -34,7 +34,7 @@ void save2D (double* tab, int nbLignes, int nbCols, int duree) {
 	int i,j=0;
 
 	if(existed == -1) // Fichier cree
-		fprintf(fp, "%d\n%d;%d\n", duree, nbLignes, nbCols);
+		fprintf(fp, "%d\n%d;%d\n", duree+1, nbLignes, nbCols);
 
 	for (i=0; i<nbLignes * nbCols; i++) {
 		j++;
