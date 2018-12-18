@@ -21,7 +21,7 @@ public class APDFrame extends JFrame {
 	private final String COLSEP = ";";
 	private final String LINESEP = "\n";
 	private boolean saveImgs;
-	
+
 	public APDFrame() throws HeadlessException {
 		super("Propagation de la chaleur");
 		saveImgs = false;
@@ -103,15 +103,15 @@ public class APDFrame extends JFrame {
 		});
 		labelTemp.setLabelFor(seuil_temp);
 		panelTexte.add(seuil_temp);
-		
+
 		JCheckBox save = new JCheckBox("Enregistrer les images ?");
-		save.addItemListener(new ItemListener() {			
+		save.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {saveImgs = (e.getStateChange() == ItemEvent.SELECTED);}
 		});
 		panelTexte.add(save);
 		panelTexte.add(new JLabel(""));
-		
+
 		JLabel labelFreq = new JLabel("Frequence d'affichage (ms) : ");
 		panelTexte.add(labelFreq);
 		JTextField freq = new JTextField("1000", 6);
@@ -129,7 +129,7 @@ public class APDFrame extends JFrame {
 		});
 		labelFreq.setLabelFor(freq);
 		panelTexte.add(freq);
-		
+
 		JLabel labelProcess = new JLabel("Nombre de processus : ");
 		panelTexte.add(labelProcess);
 		JTextField nbProcess = new JTextField("4", 2);
@@ -219,9 +219,9 @@ public class APDFrame extends JFrame {
 			}
 
 			SpringUtilities.makeGrid(panel, nbLignes, nbCol, 5, 5, 5, 5);
-			
+
 			JPanel panel2 = new JPanel(new BorderLayout());
-			
+
 			panel2.add(panel,BorderLayout.NORTH);
 			JButton bouton = new JButton("Valider");
 			bouton.addActionListener(new ActionListener() {
@@ -230,7 +230,7 @@ public class APDFrame extends JFrame {
 					String values[] = new String[nbCol*nbLignes];
 					for(int i=0; i<nbCol*nbLignes; i++)
 						values[i] = textFields[i].getText();
-					
+
 					saveFileAndExeC(values, nbCol, nbLignes, dureeSec, seuilTemp, freq, nbProcess);
 				}
 			});
@@ -248,18 +248,18 @@ public class APDFrame extends JFrame {
 			new APDFrame();
 		}
 	}
-	
+
 	private void saveFileAndExeC(String[] values, int nbCol, int nbLignes, int dureeSec, float seuilTemp, String freq, String nbProcess) {
-		this.setVisible(false);
+		//this.setVisible(false);
 		try(BufferedWriter bf = new BufferedWriter(new FileWriter("tmp.txt"))) {
 			if(nbLignes != 1)
 				bf.write(Integer.toString(nbLignes)+COLSEP+Integer.toString(nbCol)+LINESEP);
 			else
 				bf.write(Integer.toString(nbCol)+LINESEP);
-			
+
 			bf.write(Integer.toString(dureeSec)+LINESEP);
 			bf.write(Float.toString(seuilTemp)+LINESEP);
-			
+
 			for (int i=0; i<nbLignes*nbCol;i++) {
 				bf.write(values[i]+COLSEP);
 
@@ -267,7 +267,7 @@ public class APDFrame extends JFrame {
 					bf.write(LINESEP);
 			}
 		} catch (IOException e) {e.printStackTrace();}
-		
+
 		String cmd = "mpirun -np " + nbProcess + " ./test";
 		if(saveImgs)	cmd += " save";
 		cmd += " " + freq;
@@ -276,7 +276,7 @@ public class APDFrame extends JFrame {
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
 		} catch (IOException | InterruptedException e) {e.printStackTrace();}
-		
+
 		System.exit(1);
 	}
 }

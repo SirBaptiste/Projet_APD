@@ -9,19 +9,18 @@ int main(int argc, char** argv) {
 	double seuil;
 	//lecture des donnees saisies par l'utilisateur
 	double *tab, *sousMat;
-	
+
 	MPI_Init(&argc,&argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rang);
 	MPI_Comm_size(MPI_COMM_WORLD, &nbProcess);
 
 	// Verif taille tab avec nb proc
 	if (rang==0) {
-		printf("coucou\n");
+		tab  = init2D("tmp.txt", &nbLignes, &nbCol, &duree, &seuil);
 		if(nbLignes%nbProcess != 0){
 			fprintf(stderr, "%d EST PAS UN DIVISEUR DE %d\n", nbProcess, nbLignes);
 			return EXIT_FAILURE;
 		}
-		tab  = init2D("tmp.txt", &nbLignes, &nbCol, &duree, &seuil);
 	}
 
 	MPI_Bcast(&nbLignes, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -41,8 +40,8 @@ int main(int argc, char** argv) {
 
 	sousMat = (double*) malloc(sizeof(double) * tailleSousMat);
 
-	for(j=0; j<duree; j++) {	
-		if(rang == 0) {	
+	for(j=0; j<duree; j++) {
+		if(rang == 0) {
 			// Envoi des sous matrices
 			for(i=0; i<nbProcess; i++) {
 				// Ps 0
@@ -55,12 +54,12 @@ int main(int argc, char** argv) {
 					MPI_Send(tab + i*nbElem - nbCol, nbElem+nbCol, MPI_DOUBLE, i, 0, MPI_COMM_WORLD);
 			}
 		}
-	
+
 		MPI_Recv(sousMat, tailleSousMat, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-	
+
 		// Iteration
-		Calcul_Temp_2d(sousMat, nbLignesRecues, nbCol,seuil); 
-	
+		Calcul_Temp_2d(sousMat, nbLignesRecues, nbCol,seuil);
+
 		// Regroupement des sous matrices à root
 		offset = (rang==0)? 0:nbCol;
 		MPI_Gather(sousMat+offset, nbElem, MPI_DOUBLE, tab, nbElem, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -80,8 +79,8 @@ int main(int argc, char** argv) {
 				printf("Erreur execution python\n");
 		}
 	}
-	
+
 	MPI_Finalize();
-	
+
 	return EXIT_SUCCESS;
 }
